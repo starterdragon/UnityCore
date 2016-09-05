@@ -5,7 +5,7 @@ Released:
 - 0.15.x support
 - blocks from 0.15.x
 - Custom say messages (When command running from console, changed "CONSOLE" on "Server Name")
-- Custom private messages command
+- Custom private messages
 
 Coming soon:
 - full 0.16.x support
