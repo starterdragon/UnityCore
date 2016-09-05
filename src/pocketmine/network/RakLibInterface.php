@@ -29,6 +29,7 @@ use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\MainLogger;
 use raklib\protocol\EncapsulatedPacket;
+use raklib\protocol\PacketReliability;
 use raklib\RakLib;
 use raklib\server\RakLibServer;
 use raklib\server\ServerHandler;
@@ -74,7 +75,10 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		$work = false;
 		if($this->interface->handlePacket()){
 			$work = true;
+			$lasttime = time();
 			while($this->interface->handlePacket()){
+				$diff = time() - $lasttime;
+				if($diff >= 1) break;
 			}
 		}
 
@@ -137,21 +141,21 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 					}
 				}
 			}catch(\Throwable $e){
+				$logger = $this->server->getLogger();
 				if(\pocketmine\DEBUG > 1 and isset($pk)){
-					$logger = $this->server->getLogger();
-					$logger->debug("Packet " . get_class($pk) . " 0x" . bin2hex($packet->buffer));
-					$logger->logException($e);
+					$logger->debug("Exception in packet " . get_class($pk) . " 0x" . bin2hex($packet->buffer));
 				}
-
-				if(isset($this->players[$identifier])){
-					$this->interface->blockAddress($this->players[$identifier]->getAddress(), 5);
-				}
+				$logger->logException($e);
 			}
 		}
 	}
 
 	public function blockAddress($address, $timeout = 300){
 		$this->interface->blockAddress($address, $timeout);
+	}
+	
+	public function unblockAddress($address){
+		$this->interface->unblockAddress($address);
 	}
 
 	public function handleRaw($address, $port, $payload){
@@ -199,8 +203,8 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 				if(!isset($packet->__encapsulatedPacket)){
 					$packet->__encapsulatedPacket = new CachedEncapsulatedPacket;
 					$packet->__encapsulatedPacket->identifierACK = null;
-					$packet->__encapsulatedPacket->buffer = chr(0xfe) . $packet->buffer; // #blameshoghi
-					$packet->__encapsulatedPacket->reliability = 3;
+					$packet->__encapsulatedPacket->buffer = chr(0xfe) . $packet->buffer;
+					$packet->__encapsulatedPacket->reliability = PacketReliability::RELIABLE_ORDERED;
 					$packet->__encapsulatedPacket->orderChannel = 0;
 				}
 				$pk = $packet->__encapsulatedPacket;
@@ -215,8 +219,8 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 
 			if($pk === null){
 				$pk = new EncapsulatedPacket();
-				$pk->buffer = chr(0xfe) . $packet->buffer; // #blameshoghi
-				$packet->reliability = 3;
+				$pk->buffer = chr(0xfe) . $packet->buffer;
+				$packet->reliability = PacketReliability::RELIABLE_ORDERED;
 				$packet->orderChannel = 0;
 
 				if($needACK === true){
