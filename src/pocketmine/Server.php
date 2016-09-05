@@ -142,6 +142,9 @@ class Server{
 	private $operators = null;
 
 	/** @var Config */
+	private $vips = null;
+
+	/** @var Config */
 	private $whitelist = null;
 
 	/** @var bool */
@@ -1285,6 +1288,15 @@ class Server{
 		}
 		$this->operators->save(true);
 	}
+	
+	public function addVip($name){
+		$this->vips->set(strtolower($name), true);
+
+		if(($player = $this->getPlayerExact($name)) !== null){
+			$player->recalculatePermissions();
+		}
+		$this->vips->save(true);
+	}
 
 	/**
 	 * @param string $name
@@ -1296,6 +1308,15 @@ class Server{
 			$player->recalculatePermissions();
 		}
 		$this->operators->save();
+	}
+	
+	public function removeVip($name){
+		$this->vips->remove(strtolower($name));
+
+		if(($player = $this->getPlayerExact($name)) !== null){
+			$player->recalculatePermissions();
+		}
+		$this->vips->save();
 	}
 
 	/**
@@ -1331,6 +1352,10 @@ class Server{
 	public function isOp($name){
 		return $this->operators->exists($name, true);
 	}
+	
+	public function isVip($name){
+		return $this->vips->exists($name, true);
+	}
 
 	/**
 	 * @return Config
@@ -1344,6 +1369,10 @@ class Server{
 	 */
 	public function getOps(){
 		return $this->operators;
+	}
+	
+	public function getVips(){
+		return $this->vips;
 	}
 
 	public function reloadWhitelist(){
@@ -1499,6 +1528,7 @@ class Server{
 			$this->levelMetadata = new LevelMetadataStore();
 
 			$this->operators = new Config($this->dataPath . "ops.txt", Config::ENUM);
+			$this->vips = new Config($this->dataPath . "vips.txt", Config::ENUM);
 			$this->whitelist = new Config($this->dataPath . "white-list.txt", Config::ENUM);
 			if(file_exists($this->dataPath . "banned.txt") and !file_exists($this->dataPath . "banned-players.txt")){
 				@rename($this->dataPath . "banned.txt", $this->dataPath . "banned-players.txt");
@@ -1908,6 +1938,7 @@ class Server{
 		$this->banByName->load();
 		$this->reloadWhitelist();
 		$this->operators->reload();
+		$this->vips->reload();
 
 		foreach($this->getIPBans()->getEntries() as $entry){
 			$this->getNetwork()->blockAddress($entry->getName(), -1);
