@@ -62,6 +62,10 @@ class OfflinePlayer implements IPlayer{
 		return $this->server->isOp(strtolower($this->getName()));
 	}
 
+	public function isVip(){
+		return $this->server->isVip(strtolower($this->getName()));
+	}
+
 	public function setOp($value){
 		if($value === $this->isOp()){
 			return;
@@ -71,6 +75,18 @@ class OfflinePlayer implements IPlayer{
 			$this->server->addOp(strtolower($this->getName()));
 		}else{
 			$this->server->removeOp(strtolower($this->getName()));
+		}
+	}
+
+	public function setVip($value){
+		if($value === $this->isOp()){
+			return;
+		}
+
+		if($value === true){
+			$this->server->addVip(strtolower($this->getName()));
+		}else{
+			$this->server->removeVip(strtolower($this->getName()));
 		}
 	}
 
