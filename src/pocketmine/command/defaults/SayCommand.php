@@ -49,7 +49,7 @@ class SayCommand extends VanillaCommand{
 			return false;
 		}
 
-		$sender->getServer()->broadcastMessage(new TranslationContainer(TextFormat::RED . "%chat.type.announcement", [$sender instanceof Player ? $sender->getDisplayName() : ($sender instanceof ConsoleCommandSender ? $this->getServer()->getNetwork()->getName() : $sender->getName()), TextFormat::RED . implode(" ", $args)]));
+		$sender->getServer()->broadcastMessage(new TranslationContainer(TextFormat::RED . "%chat.type.announcement", [$sender instanceof Player ? $sender->getDisplayName() : ($sender instanceof ConsoleCommandSender ? $sender->getServer()->getNetwork()->getName() : $sender->getName()), TextFormat::RED . implode(" ", $args)]));
 		return true;
 	}
 }
