@@ -410,6 +410,10 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	public function isOp(){
 		return $this->server->isOp($this->getName());
 	}
+	
+	public function isVip(){
+		return $this->server->isVip($this->getName());
+	}
 
 	/**
 	 * @param bool $value
@@ -423,6 +427,20 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$this->server->addOp($this->getName());
 		}else{
 			$this->server->removeOp($this->getName());
+		}
+
+		$this->recalculatePermissions();
+	}
+	
+	public function setVip($value){
+		if($value === $this->isVip()){
+			return;
+		}
+
+		if($value === true){
+			$this->server->addVip($this->getName());
+		}else{
+			$this->server->removeVip($this->getName());
 		}
 
 		$this->recalculatePermissions();
