@@ -97,14 +97,3 @@ interface Info{
 	const REPLACE_SELECTED_ITEM_PACKET = 0x40;
 	const ADD_ITEM_PACKET = 0x41;
 }
-
-
-
-
-
-
-
-
-
-
-
