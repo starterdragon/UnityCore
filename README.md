@@ -1,5 +1,6 @@
 # UnityCore
 PocketMine-MP Fork
+VK Group - https://vk.com/begsapi
 
 ###Released:
 - full 0.15.x support (0.15.0 - 0.15.7)
