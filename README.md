@@ -1,6 +1,8 @@
 # UnityCore
 PocketMine-MP Fork
 
+[![RELEASES](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://github.com/xBeeegsone/UnityCore/releases)
+
 VK Group - https://vk.com/begsapi
 
 ###Released:
