@@ -4,14 +4,14 @@ PocketMine-MP Fork
 VK Group - https://vk.com/begsapi
 
 ###Released:
-- full 0.15.x support (0.15.0 - 0.15.7)
-- blocks from 0.15.x
+- full 1.0.x support (1.0.0 - 1.0.1)
+- blocks from 1.0.х
 - Custom say messages (Instead "CONSOLE", writing Current MOTD of Server and then message, which sended from console.)
 - Custom private messages (Instead "CONSOLE", writing Current MOTD of Server and then message, which sended from console.)
 - permissions (as isVip() and etc.)
 
 ###Coming soon:
-- full 0.16.x support
+- full 1.0.0 support
 - proxy
 - customized setDisplayName and setNameTag on vips and ops
 
